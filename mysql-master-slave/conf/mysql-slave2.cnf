@@ -1,0 +1,12 @@
+[mysqld]
+server-id = 12
+user = mysql
+port = 3306
+#log = /var/log/mysql.log
+#log-error = /var/log/mysql-error.log
+default-authentication-plugin = mysql_native_password
+binlog_format = ROW
+log_bin = mysql-bin
+relay-log = mysql-relay-bin
+gtid_mode = ON
+enforce_gtid_consistency = ON
