@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  mysql-master:
+  mysql_master:
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-master"
@@ -9,7 +9,7 @@ services:
     ports:
     - 13306:3306
     networks:
-      mysql-net:
+      mysql_net:
         ipv4_address: 172.16.111.10
     environment:
       MYSQL_USER: my_user
@@ -21,9 +21,9 @@ services:
     - ./conf/mysql-master.cnf:/etc/mysql/conf.d/mysql-master.cnf
     - ./data/master:/var/lib/mysql
     - ./log/master:/var/log/mysql
-  mysql-slave1:
+  mysql_slave1:
     depends_on:
-    - mysql-master
+    - mysql_master
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-slave1"
@@ -31,7 +31,7 @@ services:
     ports:
     - 13307:3306
     networks:
-      mysql-net:
+      mysql_net:
         ipv4_address: 172.16.111.11
     environment:
       # MYSQL_USER: my_user
@@ -54,9 +54,9 @@ services:
       done
       echo 'MySQL master has started.'
       docker-entrypoint.sh mysqld
-  mysql-slave2:
+  mysql_slave2:
     depends_on:
-    - mysql-master
+    - mysql_master
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-slave2"
@@ -64,7 +64,7 @@ services:
     ports:
     - 13308:3306
     networks:
-      mysql-net:
+      mysql_net:
         ipv4_address: 172.16.111.12
     environment:
       # MYSQL_USER: my_user
@@ -87,9 +87,22 @@ services:
       done
       echo 'MySQL master has started.'
       docker-entrypoint.sh mysqld
-
+  orchestrator:
+    depends_on:
+    - mysql_master
+    restart: "always"
+    image: openarkcode/orchestrator:v3.1.4
+    container_name: orchestrator
+    hostname: orchestrator
+    networks:
+      mysql_net:
+        ipv4_address: 172.16.111.100
+    ports:
+    - 14000:3000
+    volumes:
+      - ./conf/orchestrator.conf.json:/etc/orchestrator.conf.json
 networks:
-  mysql-net:
+  mysql_net:
     ipam:
       driver: default
       config:
