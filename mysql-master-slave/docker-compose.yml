@@ -49,7 +49,7 @@ services:
     - |
       set -e
       echo 'Waiting for MySQL master to be available...'
-      until ! mysql -hmysql-master -urepl -prepl -e 'select 1;' | grep -q 1; do
+      until ! mysql -h172.16.111.10 -urepl -prepl -e 'select 1;' | grep -q 1; do
         sleep 3
       done
       echo 'MySQL master has started.'
