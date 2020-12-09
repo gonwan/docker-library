@@ -5,12 +5,14 @@ services:
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-master"
-    hostname: "mysql-master"
+    hostname: "mysql-master.my-cluster"
     ports:
     - 13306:3306
     networks:
       mysql_net:
         ipv4_address: 172.16.111.10
+        aliases:
+        - "mysql-master.my-cluster"
     environment:
       MYSQL_USER: my_user
       MYSQL_PASSWORD: my_passw0rd
@@ -27,12 +29,14 @@ services:
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-slave1"
-    hostname: "mysql-slave1"
+    hostname: "mysql-slave1.my-cluster"
     ports:
     - 13307:3306
     networks:
       mysql_net:
         ipv4_address: 172.16.111.11
+        aliases:
+        - "mysql-slave1.my-cluster"
     environment:
       # MYSQL_USER: my_user
       # MYSQL_PASSWORD: my_passw0rd
@@ -43,29 +47,20 @@ services:
     - ./conf/mysql-slave1.cnf:/etc/mysql/conf.d/mysql-slave1.cnf
     - ./data/slave1:/var/lib/mysql
     - ./log/slave1:/var/log/mysql
-    entrypoint:
-    - bash
-    - -c
-    - |
-      set -e
-      echo 'Waiting for MySQL master to be available...'
-      until ! mysql -h172.16.111.10 -urepl -prepl -e 'select 1;' | grep -q 1; do
-        sleep 3
-      done
-      echo 'MySQL master has started.'
-      docker-entrypoint.sh mysqld
   mysql-slave2:
     depends_on:
     - mysql-master
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-slave2"
-    hostname: "mysql-slave2"
+    hostname: "mysql-slave2.my-cluster"
     ports:
     - 13308:3306
     networks:
       mysql_net:
         ipv4_address: 172.16.111.12
+        aliases:
+        - "mysql-slave2.my-cluster"
     environment:
       # MYSQL_USER: my_user
       # MYSQL_PASSWORD: my_passw0rd
@@ -76,17 +71,6 @@ services:
     - ./conf/mysql-slave2.cnf:/etc/mysql/conf.d/mysql-slave2.cnf
     - ./data/slave2:/var/lib/mysql
     - ./log/slave2:/var/log/mysql
-    entrypoint:
-    - bash
-    - -c
-    - |
-      set -e
-      echo 'Waiting for MySQL master to be available...'
-      until ! mysql -hmysql-master -urepl -prepl -e 'select 1;' | grep -q 1; do
-        sleep 3
-      done
-      echo 'MySQL master has started.'
-      docker-entrypoint.sh mysqld
   orchestrator:
     depends_on:
     - mysql-master
