@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  mysql_master:
+  mysql-master:
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-master"
@@ -21,9 +21,9 @@ services:
     - ./conf/mysql-master.cnf:/etc/mysql/conf.d/mysql-master.cnf
     - ./data/master:/var/lib/mysql
     - ./log/master:/var/log/mysql
-  mysql_slave1:
+  mysql-slave1:
     depends_on:
-    - mysql_master
+    - mysql-master
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-slave1"
@@ -54,9 +54,9 @@ services:
       done
       echo 'MySQL master has started.'
       docker-entrypoint.sh mysqld
-  mysql_slave2:
+  mysql-slave2:
     depends_on:
-    - mysql_master
+    - mysql-master
     restart: "always"
     image: mysql:8.0
     container_name: "mysql-slave2"
@@ -89,7 +89,7 @@ services:
       docker-entrypoint.sh mysqld
   orchestrator:
     depends_on:
-    - mysql_master
+    - mysql-master
     restart: "always"
     image: openarkcode/orchestrator:v3.1.4
     container_name: orchestrator
@@ -100,7 +100,27 @@ services:
     ports:
     - 14000:3000
     volumes:
-      - ./conf/orchestrator.conf.json:/etc/orchestrator.conf.json
+    - ./conf/orchestrator.conf.json:/etc/orchestrator.conf.json
+  consul:
+    restart: "always"
+    image: consul:1.8
+    container_name: consul
+    hostname: consul
+    networks:
+      mysql_net:
+        ipv4_address: 172.16.111.110
+    ports:
+    - 14001:8500
+  # haproxy:
+  #   restart: "always"
+  #   image: haproxy:2.2
+  #   container_name: haproxy
+  #   hostname: haproxy
+  #   networks:
+  #     mysql_net:
+  #       ipv4_address: 172.16.111.120
+  #   ports:
+  #   - 3306:3306
 networks:
   mysql_net:
     ipam:
