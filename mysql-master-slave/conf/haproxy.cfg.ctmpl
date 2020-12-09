@@ -1,0 +1,23 @@
+global
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    user        haproxy
+    group       haproxy
+    daemon
+
+defaults
+    mode                    tcp
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+
+frontend mysql_ha
+    bind                *:3306
+    maxconn             256
+    default_backend     mysql_ha_backend
+
+backend mysql_ha_backend
+    balance             first
+    retries             1
+    default-server fall 2 inter 1000 rise 1 downinter 1000 on-marked-down shutdown-sessions weight 10
+    server mysql_master {{key "mysql/master/my-cluster/ipv4"}}:{{key "mysql/master/my-cluster/port"}}

@@ -76,8 +76,8 @@ services:
     - mysql-master
     restart: "always"
     image: openarkcode/orchestrator:v3.1.4
-    container_name: orchestrator
-    hostname: orchestrator
+    container_name: "orchestrator"
+    hostname: "orchestrator"
     networks:
       mysql_net:
         ipv4_address: 172.16.111.100
@@ -95,16 +95,23 @@ services:
         ipv4_address: 172.16.111.110
     ports:
     - 14001:8500
-  # haproxy:
-  #   restart: "always"
-  #   image: haproxy:2.2
-  #   container_name: haproxy
-  #   hostname: haproxy
-  #   networks:
-  #     mysql_net:
-  #       ipv4_address: 172.16.111.120
-  #   ports:
-  #   - 3306:3306
+  consul-template:
+    depends_on:
+    - consul
+    user: 0:0
+    restart: "always"
+    image: hashicorp/consul-template:alpine
+    container_name: "consul-template"
+    hostname: "consul-template"
+    networks:
+      mysql_net:
+        ipv4_address: 172.16.111.120
+    ports:
+    - 3306:3306
+    volumes:
+    - ./scripts/consul-template-start.sh:/consul-template/start.sh
+    - ./conf/haproxy.cfg.ctmpl:/consul-template/data/haproxy.cfg.ctmpl
+    command: /consul-template/start.sh
 networks:
   mysql_net:
     ipam:
