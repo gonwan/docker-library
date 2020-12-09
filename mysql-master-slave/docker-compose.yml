@@ -19,7 +19,7 @@ services:
       MYSQL_DATABASE: my_database
       MYSQL_ROOT_PASSWORD: secret_valley
     volumes:
-    - ./scripts/master:/docker-entrypoint-initdb.d
+    - ./scripts/mysql-master.sql:/docker-entrypoint-initdb.d/mysql-master.sql
     - ./conf/mysql-master.cnf:/etc/mysql/conf.d/mysql-master.cnf
     - ./data/master:/var/lib/mysql
     - ./log/master:/var/log/mysql
@@ -43,7 +43,7 @@ services:
       # MYSQL_DATABASE: my_database
       MYSQL_ROOT_PASSWORD: secret_valley
     volumes:
-    - ./scripts/slave:/docker-entrypoint-initdb.d
+    - ./scripts/mysql-slave.sql:/docker-entrypoint-initdb.d/mysql-slave.sql
     - ./conf/mysql-slave1.cnf:/etc/mysql/conf.d/mysql-slave1.cnf
     - ./data/slave1:/var/lib/mysql
     - ./log/slave1:/var/log/mysql
@@ -67,7 +67,7 @@ services:
       # MYSQL_DATABASE: my_database
       MYSQL_ROOT_PASSWORD: secret_valley
     volumes:
-    - ./scripts/slave:/docker-entrypoint-initdb.d
+    - ./scripts/mysql-slave.sql:/docker-entrypoint-initdb.d/mysql-slave.sql
     - ./conf/mysql-slave2.cnf:/etc/mysql/conf.d/mysql-slave2.cnf
     - ./data/slave2:/var/lib/mysql
     - ./log/slave2:/var/log/mysql
