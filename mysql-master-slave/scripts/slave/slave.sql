@@ -1,5 +1,5 @@
 -- Wait for master.
 SELECT SLEEP(5);
 -- Note: master_host is hardcoded here.
-CHANGE MASTER TO master_host='172.16.111.10', master_port=3306, master_user='repl', master_password='repl', MASTER_AUTO_POSITION=1;
+CHANGE MASTER TO MASTER_HOST = '172.16.111.10', MASTER_PORT = 3306, MASTER_USER = 'repl', MASTER_PASSWORD = 'repl', MASTER_AUTO_POSITION = 1, MASTER_CONNECT_RETRY = 3, MASTER_RETRY_COUNT = 86400;
 START SLAVE;

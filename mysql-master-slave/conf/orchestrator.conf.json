@@ -58,7 +58,7 @@
   "PromotionIgnoreHostnameFilters": [],
   "DetectSemiSyncEnforcedQuery": "",
   "DiscoverySeeds": [
-    "172.16.111.10:3306"
+    "mysql-master.my-cluster:3306"
   ],
   "ServeAgentsHttp": false,
   "AgentsServerPort": ":3001",
@@ -96,10 +96,10 @@
   "RecoveryPeriodBlockSeconds": 3600,
   "RecoveryIgnoreHostnameFilters": [],
   "RecoverMasterClusterFilters": [
-    "_master_pattern_"
+    "*"
   ],
   "RecoverIntermediateMasterClusterFilters": [
-    "_intermediate_master_pattern_"
+    "*"
   ],
   "OnFailureDetectionProcesses": [
     "echo 'Detected {failureType} on {failureCluster}. Affected replicas: {countSlaves}' >> /tmp/recovery.log"
@@ -126,7 +126,7 @@
   "CoMasterRecoveryMustPromoteOtherCoMaster": true,
   "DetachLostSlavesAfterMasterFailover": true,
   "ApplyMySQLPromotionAfterMasterFailover": true,
-  "PreventCrossDataCenterMasterFailover": false,
+  "PreventCrossDataCenterMasterFailover": true,
   "PreventCrossRegionMasterFailover": false,
   "MasterFailoverDetachReplicaMasterHost": false,
   "MasterFailoverLostInstancesDowntimeMinutes": 0,
@@ -135,7 +135,7 @@
   "GraphiteAddr": "",
   "GraphitePath": "",
   "GraphiteConvertHostnameDotsToUnderscores": true,
-  "ConsulAddress": "172.16.111.110:8500",
+  "ConsulAddress": "consul:8500",
   "ConsulAclToken": "",
   "KVClusterMasterPrefix": "mysql/master"
 }
