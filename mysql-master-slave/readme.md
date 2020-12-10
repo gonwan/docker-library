@@ -17,7 +17,7 @@ More info: [https://www.percona.com/live/18/sessions/orchestrator-high-availabil
 - Orchestrator 3.1.4
 - Consul 1.8
 - Consul Template 0.25.1
-- HAproxy 2.0
+- HAProxy 2.0
 
 # Run
 ```
@@ -31,12 +31,12 @@ More info: [https://www.percona.com/live/18/sessions/orchestrator-high-availabil
 | Orchestrator     | 172.16.111.100:3000  | localhost:14000  |
 | Consul           | 172.16.111.110:8500  | localhost:14001  |
 | Consul Template  | N/A                  | N/A              |
-| HAproxy          | 172.16.111.120:3306  | localhost:3306   |
+| HAProxy          | 172.16.111.120:3306  | localhost:3306   |
 |                  | 172.16.111.120:8000  | localhost:8000   |
 
 Open [http://localhost:14000](http://localhost:14000) to visit Orchestrator.
 
-Connect to MySQL via HAproxy:
+Connect to MySQL via HAProxy:
 ```
 # mysql -hlocalhost -uroot -psecret_valley
 ```
