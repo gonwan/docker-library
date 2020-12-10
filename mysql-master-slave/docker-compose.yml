@@ -108,6 +108,7 @@ services:
         ipv4_address: 172.16.111.120
     ports:
     - 3306:3306
+    - 14002:8000
     volumes:
     - ./scripts/consul-template-start.sh:/consul-template/start.sh
     - ./conf/haproxy.cfg.ctmpl:/consul-template/data/haproxy.cfg.ctmpl

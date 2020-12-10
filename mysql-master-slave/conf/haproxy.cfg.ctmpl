@@ -6,12 +6,21 @@ global
     daemon
 
 defaults
-    mode                    tcp
-    timeout connect         10s
-    timeout client          1m
-    timeout server          1m
+    mode                tcp
+    timeout connect     10s
+    timeout client      1m
+    timeout server      1m
+
+frontend stats
+    mode                http
+    bind                *:8000
+    stats               enable
+    stats               uri /stats
+    stats               refresh 10s
+    stats               if LOCALHOST
 
 frontend mysql_ha
+    mode                tcp
     bind                *:3306
     maxconn             256
     default_backend     mysql_ha_backend
