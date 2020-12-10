@@ -10,6 +10,8 @@ It's a simplified version inspired by Github: [https://github.blog/2018-06-20-my
     - Each GLB/HAProxy has consul-template running, which observes the change in Consul’s KV store, and reconfigures and reloads HAProxy.
     - Client traffic gets redirected to the new primary.
 
+More info: [https://www.percona.com/live/18/sessions/orchestrator-high-availability-tutorial](https://www.percona.com/live/18/sessions/orchestrator-high-availability-tutorial)
+
 # Components
 - MySQL 8.0
 - Orchestrator 3.1.4
