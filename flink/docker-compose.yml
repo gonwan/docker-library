@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  flink-jobmanager:
+    image: flink:1.11.3
+    container_name: "flink-jobmanager"
+    hostname: "flink-jobmanager"
+    ports:
+    - 18081:8081
+    networks:
+      flink-net:
+        ipv4_address: 172.16.112.10
+    environment:
+      FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
+    command: "jobmanager"
+  flink-taskmanager1:
+    depends_on:
+    - flink-jobmanager
+    image: flink:1.11.3
+    container_name: "flink-taskmanager1"
+    hostname: "flink-taskmanager1"
+    networks:
+      flink-net:
+        ipv4_address: 172.16.112.11
+    environment:
+      FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
+    command: "taskmanager"
+  flink-taskmanager2:
+    depends_on:
+    - flink-jobmanager
+    image: flink:1.11.3
+    container_name: "flink-taskmanager2"
+    hostname: "flink-taskmanager2"
+    networks:
+      flink-net:
+        ipv4_address: 172.16.112.12
+    environment:
+      FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
+    command: "taskmanager"
+networks:
+  flink-net:
+    ipam:
+      driver: default
+      config:
+      - subnet: "172.16.112.0/24"
