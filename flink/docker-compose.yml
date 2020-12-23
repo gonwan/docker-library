@@ -6,7 +6,8 @@ services:
     container_name: "flink-jobmanager"
     hostname: "flink-jobmanager"
     ports:
-    - 18081:8081
+    - 6123:6123
+    - 8081:8081
     networks:
       flink-net:
         ipv4_address: 172.16.112.10
