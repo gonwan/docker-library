@@ -18,7 +18,7 @@ services:
     image: nginx:1.20.0-alpine
     container_name: "jenkins-ng"
     volumes:
-      - ./conf/jenkins-ng.conf:/etc/nginx/conf.d/jenkins-ng.conf
+      - ./conf/jenkins-ng.conf:/etc/nginx/nginx.conf
     networks:
       jenkins-net:
         ipv4_address: 172.16.111.100
