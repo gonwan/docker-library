@@ -1,0 +1,40 @@
+version: '3'
+services:
+  zookeeper:
+    image: zookeeper:3.5
+    container_name: "zookeeper"
+    restart: always
+    hostname: zookeeper
+    ports:
+    - 2181:2181
+    networks:
+      clickhouse-net:
+        ipv4_address: 172.16.113.11
+  clickhouse-server:
+    # do ignore initial network & zookeeper errors
+    image: yandex/clickhouse-server:21.9-alpine
+    depends_on:
+    - zookeeper
+    restart: always
+    container_name: "clickhouse-server"
+    hostname: "clickhouse-server"
+    ports:
+    - 8123:8123
+    - 9000:9000
+    networks:
+      clickhouse-net:
+        ipv4_address: 172.16.113.20
+    ulimits:
+      nofile:
+        soft: "262144"
+        hard: "262144"
+    volumes:
+    - ./config/config.xml:/etc/clickhouse-server/config.xml
+    - ./data:/var/lib/clickhouse
+    - ./log:/var/log/clickhouse-server
+networks:
+  clickhouse-net:
+    ipam:
+      driver: default
+      config:
+      - subnet: "172.16.113.0/24"
