@@ -4,7 +4,7 @@ services:
     image: zookeeper:3.5
     container_name: "zookeeper"
     restart: always
-    hostname: zookeeper
+    hostname: "zookeeper"
     ports:
     - 2181:2181
     networks:
@@ -26,8 +26,8 @@ services:
         ipv4_address: 172.16.113.20
     ulimits:
       nofile:
-        soft: "262144"
-        hard: "262144"
+        soft: 262144
+        hard: 262144
     volumes:
     - ./config/config.xml:/etc/clickhouse-server/config.xml
     - ./data:/var/lib/clickhouse
