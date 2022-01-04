@@ -1,0 +1,35 @@
+version: "3"
+# https://github.com/SonarSource/docker-sonarqube
+# sysctl -w vm.max_map_count=262144
+
+services:
+  sonarqube:
+    image: sonarqube:8.9-community
+    ports:
+      - "9000:9000"
+    environment:
+      SONARQUBE_JDBC_URL: jdbc:sqlserver://172.16.56.134:1433;database=SonarQube
+      SONARQUBE_JDBC_USERNAME: sa
+      SONARQUBE_JDBC_PASSWORD: asdfasdf
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_temp:/opt/sonarqube/temp
+# /var/lib/docker/volumes
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
+
+# java
+# download scanner, extract, and modify sonar-scanner.properties.
+# go to project folder, create sonar-project.properties or simply run:
+# # sonar-scanner -Dsonar.projectKey=project-key -Dsonar.java.binaries=target
+
+# csharp
+# download scanner, extract, and modify SonarQube.Analysis.xml.
+# # SonarScanner.MSBuild.exe begin /k:"project-key"
+# # MSBuild.exe <path to solution.sln> /t:Rebuild
+# # SonarScanner.MSBuild.exe end

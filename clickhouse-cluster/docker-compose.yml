@@ -12,7 +12,7 @@ services:
         ipv4_address: 172.16.113.11
   clickhouse-server:
     # do ignore initial network & zookeeper errors
-    image: yandex/clickhouse-server:21.9-alpine
+    image: clickhouse/clickhouse-server:21.9-alpine
     depends_on:
     - zookeeper
     restart: always

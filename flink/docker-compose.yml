@@ -2,7 +2,7 @@ version: '3'
 
 services:
   flink-jobmanager:
-    image: flink:1.13.2
+    image: flink:1.14.3
     container_name: "flink-jobmanager"
     hostname: "flink-jobmanager"
     ports:
@@ -17,7 +17,7 @@ services:
   flink-taskmanager1:
     depends_on:
     - flink-jobmanager
-    image: flink:1.13.2
+    image: flink:1.14.3
     container_name: "flink-taskmanager1"
     hostname: "flink-taskmanager1"
     networks:
@@ -29,7 +29,7 @@ services:
   flink-taskmanager2:
     depends_on:
     - flink-jobmanager
-    image: flink:1.13.2
+    image: flink:1.14.3
     container_name: "flink-taskmanager2"
     hostname: "flink-taskmanager2"
     networks:
