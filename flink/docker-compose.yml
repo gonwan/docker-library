@@ -2,12 +2,12 @@ version: '3'
 
 services:
   flink-jobmanager:
-    image: flink:1.14.2
+    image: flink:1.14.3
     container_name: "flink-jobmanager"
     hostname: "flink-jobmanager"
     ports:
-    - 6123:6123
-    - 8081:8081
+      - 6123:6123
+      - 8081:8081
     networks:
       flink-net:
         ipv4_address: 172.16.112.10
@@ -16,8 +16,8 @@ services:
     command: "jobmanager"
   flink-taskmanager1:
     depends_on:
-    - flink-jobmanager
-    image: flink:1.14.2
+      - flink-jobmanager
+    image: flink:1.14.3
     container_name: "flink-taskmanager1"
     hostname: "flink-taskmanager1"
     networks:
@@ -28,8 +28,8 @@ services:
     command: "taskmanager"
   flink-taskmanager2:
     depends_on:
-    - flink-jobmanager
-    image: flink:1.14.2
+      - flink-jobmanager
+    image: flink:1.14.3
     container_name: "flink-taskmanager2"
     hostname: "flink-taskmanager2"
     networks:
@@ -38,9 +38,17 @@ services:
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
     command: "taskmanager"
+  # docker-compose run sql-client
+  flink-sql-client:
+    depends_on:
+      - flink-jobmanager
+    image: flink:1.14.3
+    environment:
+      FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
+    command: bin/sql-client.sh
 networks:
   flink-net:
     ipam:
       driver: default
       config:
-      - subnet: "172.16.112.0/24"
+        - subnet: "172.16.112.0/24"
