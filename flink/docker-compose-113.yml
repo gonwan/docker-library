@@ -1,5 +1,6 @@
 version: '3'
 
+# See: https://ververica.github.io/flink-cdc-connectors/master/content/quickstart/mysql-postgres-tutorial.html
 services:
   flink-jobmanager:
     image: flink:1.13.6
@@ -11,6 +12,9 @@ services:
     networks:
       flink-net:
         ipv4_address: 172.16.112.10
+    volumes:
+      - ./lib/flink-sql-connector-mysql-cdc-2.1.1.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.1.1.jar
+      - ./lib/flink-sql-connector-elasticsearch7_2.12-1.13.6.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7_2.12-1.13.6.jar
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
     command: "jobmanager"
@@ -60,7 +64,7 @@ services:
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
     command: bin/sql-client.sh
-  # docker-compose exec mysql mysql -uroot -P3306 -p123456
+  # docker-compose exec flink-mysql mysql -uroot -P3306 -p123456
   flink-mysql:
     image: debezium/example-mysql:1.8
     container_name: "flink-mysql"
