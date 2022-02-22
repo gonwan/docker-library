@@ -17,6 +17,8 @@ VALUES (default, '2020-07-30 10:08:22', 'Jark', 50.50, 102, false),
        (default, '2020-07-30 12:00:30', 'Edward', 25.25, 106, false);
 
 -- Flink SQL
+SET execution.checkpointing.interval = 3s;
+
 CREATE TABLE orders (
   order_id INT,
   order_date TIMESTAMP(0),
