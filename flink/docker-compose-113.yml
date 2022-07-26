@@ -48,7 +48,7 @@ services:
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
     command: "taskmanager"
-  # docker-compose run sql-client
+  # docker-compose run flink-sql-client
   flink-sql-client:
     depends_on:
       - flink-jobmanager

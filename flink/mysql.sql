@@ -52,6 +52,6 @@ CREATE TABLE gwtest_orders (
   'password' = '123456',
   'index' = 'gwtest-orders'
 );
- 
+
 INSERT INTO gwtest_orders
 SELECT * FROM orders;
