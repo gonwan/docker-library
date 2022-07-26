@@ -1,0 +1,42 @@
+version: '3'
+services:
+  mysql-server:
+    image: mysql:8.0
+    container_name: "mysql-server"
+    restart: "always"
+    ports:
+    - 13306:3306
+    networks:
+      dtm-net:
+        ipv4_address: 172.16.114.10
+    environment:
+      #MYSQL_USER: dtm_user
+      #MYSQL_PASSWORD: dtm_passw0rd
+      #MYSQL_DATABASE: dtm
+      MYSQL_ROOT_PASSWORD: secret_valley
+    volumes:
+    - ./scripts:/docker-entrypoint-initdb.d
+  dtm-server:
+    depends_on:
+    - mysql-server
+    image: yedf/dtm:1.15
+    container_name: "dtm-server"
+    restart: always
+    ports:
+    - 36789:36789
+    - 36790:36790
+    networks:
+      dtm-net:
+        ipv4_address: 172.16.114.11
+    environment:
+      STORE_DRIVER: mysql
+      STORE_HOST: mysql-server
+      STORE_PORT: 3306
+      STORE_USER: root
+      STORE_PASSWORD: secret_valley
+networks:
+  dtm-net:
+    ipam:
+      driver: default
+      config:
+      - subnet: "172.16.114.0/24"
