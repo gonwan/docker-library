@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  # restart the container if failed: docker restart apollo-server
+  # open http://localhost:8070 and login with: apollo/admin
+  apollo-server:
+    image: nobodyiam/apollo-quick-start:2.0.1
+    container_name: apollo-server
+    depends_on:
+      - apollo-db
+    ports:
+      - "8080:8080"
+      - "8070:8070"
+      - "8090:8090"
+    networks:
+      apollo-net:
+        ipv4_address: 172.16.116.111
+    environment:
+      #JAVA_OPTS: '-Xms100m -Xmx1000m -Xmn100m -Xss256k -XX:MetaspaceSize=10m -XX:MaxMetaspaceSize=250m'
+      APOLLO_CONFIG_DB_USERNAME: 'root'
+      APOLLO_CONFIG_DB_PASSWORD: 'apollo'
+      APOLLO_PORTAL_DB_USERNAME: 'root'
+      APOLLO_PORTAL_DB_PASSWORD: 'apollo'
+  apollo-db:
+    image: mysql:8.0
+    container_name: apollo-db
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      apollo-net:
+        ipv4_address: 172.16.116.110
+    environment:
+      #MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: 'apollo'
+networks:
+  apollo-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.116.0/24"
