@@ -134,3 +134,7 @@ ID                   Role          Host           Ports        OS/Arch       Sta
 172.16.56.139:20160  tikv          172.16.56.139  20160/20180  linux/x86_64  Up      /tidb-data/tikv-20160         /tidb-deploy/tikv-20160
 ```
 
+## Notes
+
+- TiDB dashboard seems to conflicts with old version of docker(1.13 e.g.) file system. Disk info displays OK after upgrading to new versions.
+
