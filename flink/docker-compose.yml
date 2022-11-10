@@ -1,9 +1,10 @@
 version: '3'
 
+# See: https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/resource-providers/standalone/docker/
 # See: https://ververica.github.io/flink-cdc-connectors/master/content/quickstart/mysql-postgres-tutorial.html
 services:
   flink-jobmanager:
-    image: flink:1.14.5
+    image: flink:1.15.2
     container_name: "flink-jobmanager"
     hostname: "flink-jobmanager"
     ports:
@@ -13,38 +14,38 @@ services:
       flink-net:
         ipv4_address: 172.16.112.10
     volumes:
-      - ./lib/flink-sql-connector-mysql-cdc-2.2.1.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.2.1.jar
-      - ./lib/flink-sql-connector-elasticsearch7_2.12-1.14.5.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7_2.12-1.14.5.jar
+      - ./lib/flink-sql-connector-mysql-cdc-2.3.0.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.3.0.jar
+      - ./lib/flink-sql-connector-elasticsearch7-1.15.2.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7-1.15.2.jar
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
     command: "jobmanager"
   flink-taskmanager1:
     depends_on:
       - flink-jobmanager
-    image: flink:1.14.5
+    image: flink:1.15.2
     container_name: "flink-taskmanager1"
     hostname: "flink-taskmanager1"
     networks:
       flink-net:
         ipv4_address: 172.16.112.11
     volumes:
-      - ./lib/flink-sql-connector-mysql-cdc-2.2.1.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.2.1.jar
-      - ./lib/flink-sql-connector-elasticsearch7_2.12-1.14.5.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7_2.12-1.14.5.jar
+      - ./lib/flink-sql-connector-mysql-cdc-2.3.0.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.3.0.jar
+      - ./lib/flink-sql-connector-elasticsearch7-1.15.2.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7-1.15.2.jar
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
     command: "taskmanager"
   flink-taskmanager2:
     depends_on:
       - flink-jobmanager
-    image: flink:1.14.5
+    image: flink:1.15.2
     container_name: "flink-taskmanager2"
     hostname: "flink-taskmanager2"
     networks:
       flink-net:
         ipv4_address: 172.16.112.12
     volumes:
-      - ./lib/flink-sql-connector-mysql-cdc-2.2.1.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.2.1.jar
-      - ./lib/flink-sql-connector-elasticsearch7_2.12-1.14.5.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7_2.12-1.14.5.jar
+      - ./lib/flink-sql-connector-mysql-cdc-2.3.0.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.3.0.jar
+      - ./lib/flink-sql-connector-elasticsearch7-1.15.2.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7-1.15.2.jar
     environment:
       FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
     command: "taskmanager"
@@ -52,17 +53,19 @@ services:
   flink-sql-client:
     depends_on:
       - flink-jobmanager
-    image: flink:1.14.5
+    image: flink:1.15.2
     container_name: "flink-sql-client"
     hostname: "flink-sql-client"
     networks:
       flink-net:
         ipv4_address: 172.16.112.13
     volumes:
-      - ./lib/flink-sql-connector-mysql-cdc-2.2.1.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.2.1.jar
-      - ./lib/flink-sql-connector-elasticsearch7_2.12-1.14.5.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7_2.12-1.14.5.jar
+      - ./lib/flink-sql-connector-mysql-cdc-2.3.0.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.3.0.jar
+      - ./lib/flink-sql-connector-elasticsearch7-1.15.2.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7-1.15.2.jar
     environment:
-      FLINK_PROPERTIES: "jobmanager.rpc.address: flink-jobmanager"
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jobmanager
+        rest.address: flink-jobmanager
     command: bin/sql-client.sh
   # docker-compose exec flink-mysql mysql -uroot -P3306 -p123456
   flink-mysql:
