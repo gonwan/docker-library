@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  kafka-0:
+    image: bitnami/kafka:3.4
+    ports:
+      - "8092:9092"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+      - KAFKA_KRAFT_CLUSTER_ID=abcdefghijklmnopqrstuv
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://172.16.56.137:8092
+    volumes:
+      - kafka_0_data:/bitnami/kafka
+  kafka-1:
+    image: docker.io/bitnami/kafka:3.4
+    ports:
+      - "8192:9092"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+      - KAFKA_KRAFT_CLUSTER_ID=abcdefghijklmnopqrstuv
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://172.16.56.137:8192
+    volumes:
+      - kafka_1_data:/bitnami/kafka
+  kafka-2:
+    image: docker.io/bitnami/kafka:3.4
+    ports:
+      - "8292:9092"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+      - KAFKA_KRAFT_CLUSTER_ID=abcdefghijklmnopqrstuv
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://172.16.56.137:8292
+    volumes:
+      - kafka_2_data:/bitnami/kafka
+
+volumes:
+  kafka_0_data:
+    driver: local
+  kafka_1_data:
+    driver: local
+  kafka_2_data:
+    driver: local
