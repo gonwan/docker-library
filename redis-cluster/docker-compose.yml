@@ -1,0 +1,101 @@
+version: '3'
+
+services:
+  redis-node-0:
+    image: bitnami/redis-cluster:6.2
+    ports:
+      - "7000:6379"
+      - "17000:16379"
+    volumes:
+      - ./redis-cluster_data-0:/bitnami/redis/data
+    environment:
+      - 'REDIS_CLUSTER_DYNAMIC_IPS=no'
+      - 'REDIS_CLUSTER_ANNOUNCE_IP=10.228.131.133'
+      - 'REDIS_CLUSTER_ANNOUNCE_PORT=7000'
+      - 'REDIS_CLUSTER_ANNOUNCE_BUS_PORT=17000'
+      - 'REDIS_PASSWORD=secret_valley'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+
+  redis-node-1:
+    image: bitnami/redis-cluster:6.2
+    ports:
+      - "7001:6379"
+      - "17001:16379"
+    volumes:
+      - ./redis-cluster_data-1:/bitnami/redis/data
+    environment:
+      - 'REDIS_CLUSTER_DYNAMIC_IPS=no'
+      - 'REDIS_CLUSTER_ANNOUNCE_IP=10.228.131.133'
+      - 'REDIS_CLUSTER_ANNOUNCE_PORT=7001'
+      - 'REDIS_CLUSTER_ANNOUNCE_BUS_PORT=17001'
+      - 'REDIS_PASSWORD=secret_valley'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+
+  redis-node-2:
+    image: bitnami/redis-cluster:6.2
+    ports:
+      - "7002:6379"
+      - "17002:16379"
+    volumes:
+      - ./redis-cluster_data-2:/bitnami/redis/data
+    environment:
+      - 'REDIS_CLUSTER_DYNAMIC_IPS=no'
+      - 'REDIS_CLUSTER_ANNOUNCE_IP=10.228.131.133'
+      - 'REDIS_CLUSTER_ANNOUNCE_PORT=7002'
+      - 'REDIS_CLUSTER_ANNOUNCE_BUS_PORT=17002'
+      - 'REDIS_PASSWORD=secret_valley'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+
+  redis-node-3:
+    image: bitnami/redis-cluster:6.2
+    ports:
+      - "7003:6379"
+      - "17003:16379"
+    volumes:
+      - ./redis-cluster_data-3:/bitnami/redis/data
+    environment:
+      - 'REDIS_CLUSTER_DYNAMIC_IPS=no'
+      - 'REDIS_CLUSTER_ANNOUNCE_IP=10.228.131.133'
+      - 'REDIS_CLUSTER_ANNOUNCE_PORT=7003'
+      - 'REDIS_CLUSTER_ANNOUNCE_BUS_PORT=17003'
+      - 'REDIS_PASSWORD=secret_valley'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+
+  redis-node-4:
+    image: bitnami/redis-cluster:6.2
+    ports:
+      - "7004:6379"
+      - "17004:16379"
+    volumes:
+      - ./redis-cluster_data-4:/bitnami/redis/data
+    environment:
+      - 'REDIS_CLUSTER_DYNAMIC_IPS=no'
+      - 'REDIS_CLUSTER_ANNOUNCE_IP=10.228.131.133'
+      - 'REDIS_CLUSTER_ANNOUNCE_PORT=7004'
+      - 'REDIS_CLUSTER_ANNOUNCE_BUS_PORT=17004'
+      - 'REDIS_PASSWORD=secret_valley'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+
+  redis-node-5:
+    image: bitnami/redis-cluster:6.2
+    ports:
+      - "6379:6379"
+      - "16379:16379"
+    volumes:
+      - ./redis-cluster_data-5:/bitnami/redis/data
+    depends_on:
+      - redis-node-0
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+    environment:
+      - 'REDIS_CLUSTER_DYNAMIC_IPS=no'
+      - 'REDIS_CLUSTER_ANNOUNCE_IP=10.228.131.133'
+      - 'REDIS_CLUSTER_ANNOUNCE_PORT=6379'
+      - 'REDIS_CLUSTER_ANNOUNCE_BUS_PORT=16379'
+      - 'REDIS_PASSWORD=secret_valley'
+      - 'REDISCLI_AUTH=secret_valley'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+      - 'REDIS_CLUSTER_REPLICAS=1'
+      - 'REDIS_CLUSTER_CREATOR=yes'
