@@ -1,0 +1,126 @@
+version: "3"
+
+services:
+  dolphinscheduler-postgresql:
+    image: bitnami/postgresql:15.2.0
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRESQL_USERNAME: root
+      POSTGRESQL_PASSWORD: root
+      POSTGRESQL_DATABASE: dolphinscheduler
+    volumes:
+      - ./dolphinscheduler-postgresql-data:/bitnami/postgresql
+    healthcheck:
+      test: ["CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/5432"]
+      interval: 5s
+      timeout: 60s
+      retries: 120
+    networks:
+      - dolphinscheduler-network
+
+  dolphinscheduler-zookeeper:
+    image: bitnami/zookeeper:3.5
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+      ZOO_4LW_COMMANDS_WHITELIST: srvr,ruok,wchs,cons
+    volumes:
+      - ./dolphinscheduler-zookeeper-data:/bitnami/zookeeper
+    healthcheck:
+      test: ["CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/2181"]
+      interval: 5s
+      timeout: 60s
+      retries: 120
+    networks:
+      - dolphinscheduler-network
+
+  dolphinscheduler-schema-initializer:
+    image: ${HUB}/dolphinscheduler-tools:${TAG}
+    env_file: .env
+    command: [ tools/bin/upgrade-schema.sh ]
+    depends_on:
+      dolphinscheduler-postgresql:
+        condition: service_healthy
+    volumes:
+      - ./dolphinscheduler-logs:/opt/dolphinscheduler/logs
+      - ./dolphinscheduler-shared-local:/opt/soft
+      - ./dolphinscheduler-resource-local:/dolphinscheduler
+    networks:
+      - dolphinscheduler-network
+
+  dolphinscheduler-api:
+    image: ${HUB}/dolphinscheduler-api:${TAG}
+    ports:
+      - "12345:12345"
+      - "25333:25333"
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "curl", "http://localhost:12345/dolphinscheduler/actuator/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      dolphinscheduler-zookeeper:
+        condition: service_healthy
+    volumes:
+      - ./dolphinscheduler-logs:/opt/dolphinscheduler/logs
+      - ./dolphinscheduler-shared-local:/opt/soft
+      - ./dolphinscheduler-resource-local:/dolphinscheduler
+    networks:
+      - dolphinscheduler-network
+
+  dolphinscheduler-alert:
+    image: ${HUB}/dolphinscheduler-alert-server:${TAG}
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "curl", "http://localhost:50053/actuator/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      dolphinscheduler-zookeeper:
+        condition: service_healthy
+    volumes:
+      - ./dolphinscheduler-logs:/opt/dolphinscheduler/logs
+    networks:
+      - dolphinscheduler-network
+
+  dolphinscheduler-master:
+    image: ${HUB}/dolphinscheduler-master:${TAG}
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "curl", "http://localhost:5679/actuator/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      dolphinscheduler-zookeeper:
+        condition: service_healthy
+    volumes:
+      - ./dolphinscheduler-logs:/opt/dolphinscheduler/logs
+      - ./dolphinscheduler-shared-local:/opt/soft
+    networks:
+      - dolphinscheduler-network
+
+  dolphinscheduler-worker:
+    image: ${HUB}/dolphinscheduler-worker:${TAG}
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "curl", "http://localhost:1235/actuator/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      dolphinscheduler-zookeeper:
+        condition: service_healthy
+    volumes:
+      - ./dolphinscheduler-worker-data:/tmp/dolphinscheduler
+      - ./dolphinscheduler-logs:/opt/dolphinscheduler/logs
+      - ./dolphinscheduler-shared-local:/opt/soft
+      - ./dolphinscheduler-resource-local:/dolphinscheduler
+    networks:
+      - dolphinscheduler-network
+
+networks:
+  dolphinscheduler-network:
+    driver: bridge
